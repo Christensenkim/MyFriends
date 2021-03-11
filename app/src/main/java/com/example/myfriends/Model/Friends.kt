@@ -2,7 +2,7 @@ package com.example.myfriends.Model
 
 object Friends {
 
-    val mFriends = arrayOf<BEFriend>(
+    var mFriends: MutableList<BEFriend> = arrayListOf<BEFriend>(
         BEFriend("Jonas", "123", true),
         BEFriend("Anders", "1234", false),
         BEFriend("Nikolaj", "12345", true),
@@ -19,8 +19,11 @@ object Friends {
         BEFriend("Kim", "12876543", true)
     )
 
-    fun getAll(): Array<BEFriend> = mFriends
+    fun getAll(): Array<BEFriend> = mFriends.toTypedArray()
 
+    fun addFriend(friend: BEFriend){
+        mFriends.add(friend)
+    }
 
     fun getAllNames(): Array<String>  =  mFriends.map { aFriend -> aFriend.name }.toTypedArray()
 

@@ -7,12 +7,29 @@ import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.ListAdapter
+import android.widget.ListView
 import android.widget.Toast
+import com.example.myfriends.Model.Friends
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val friends = Friends
+
+        val friendNames = friends.getAllNames()
+
+        val adapter: ListAdapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1, friendNames
+        )
+
+        val listView: ListView = findViewById(R.id.listOfFriends)
+
+        listView.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
