@@ -8,22 +8,35 @@ import android.os.Bundle
 import android.telephony.SmsManager
 import android.util.Log
 import android.view.View
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myfriends.Model.BEFriend
 import com.example.myfriends.Model.Friends
 import android.Manifest;
+import android.graphics.Color
+import android.os.Environment
+import android.provider.MediaStore
+import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DetailsActivity : AppCompatActivity(){
 
     val TAG = "xyz"
+    val PERMISSION_REQUEST_CODE_MESSAGE = 1
+    private val PERMISSION_REQUEST_CODE = 1
+    val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_BY_FILE = 101
+
+    var mFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+
+        checkPermissions()
     }
 
     fun saveNewFriend(view: View) {
@@ -48,6 +61,8 @@ class DetailsActivity : AppCompatActivity(){
         startActivity(intent)
     }
 
+    //region Message
+
     fun message(view: View) {
         showYesNoDialog()
     }
@@ -71,8 +86,6 @@ class DetailsActivity : AppCompatActivity(){
         sendIntent.putExtra("sms_body", "Hi, it goes well on the android course...")
         startActivity(sendIntent)
     }
-
-    val PERMISSION_REQUEST_CODE = 1
 
     private fun sendSMSDirectly() {
         Toast.makeText(this, "An sms will be send", Toast.LENGTH_LONG)
@@ -105,6 +118,86 @@ class DetailsActivity : AppCompatActivity(){
         val text = "Hi, it goes well on the android course..."
         m.sendTextMessage(PHONE_NO, null, text, null, null)
     }
+
+    //endregion
+
+    //region TakeAPicture
+
+    fun takeAPicture(view: View) {
+        mFile = getOutputMediaFile("Camera01") // create a file to save the image
+
+        if (mFile == null) {
+            Toast.makeText(this, "Could not create file...", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        val applicationId = "com.example.myfriends"
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
+                this,
+                "${applicationId}.provider",
+                mFile!!))
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_BY_FILE)
+        } else Log.d(TAG, "camera app could NOT be started")
+    }
+
+    private fun checkPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+        val permissions = mutableListOf<String>()
+        if ( ! isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE) ) permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if ( ! isGranted(Manifest.permission.CAMERA) ) permissions.add(Manifest.permission.CAMERA)
+        if (permissions.size > 0)
+            ActivityCompat.requestPermissions(this, permissions.toTypedArray(), PERMISSION_REQUEST_CODE)
+    }
+
+    private fun isGranted(permission: String): Boolean =
+            ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+
+
+    private fun getOutputMediaFile(folder: String): File? {
+        val mediaStorageDir = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), folder)
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "failed to create directory")
+                return null
+            }
+        }
+
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val postfix = "jpg"
+        val prefix = "IMG"
+        return File(mediaStorageDir.path +
+                File.separator + prefix +
+                "_" + timeStamp + "." + postfix)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val mImage = findViewById<ImageButton>(R.id.UserPicture)
+        when (requestCode) {
+
+            CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_BY_FILE ->
+                if (resultCode == RESULT_OK)
+                    showImageFromFile(mImage, mFile!!)
+                else handleOther(resultCode)
+        }
+    }
+
+    private fun handleOther(resultCode: Int) {
+        if (resultCode == RESULT_CANCELED)
+            Toast.makeText(this, "Canceled...", Toast.LENGTH_LONG).show()
+        else Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show()
+    }
+
+    private fun showImageFromFile(img: ImageButton, f: File) {
+        img.setImageURI(Uri.fromFile(f))
+        img.setBackgroundColor(Color.RED)
+    }
+
+    //endregion
 
 
 }
