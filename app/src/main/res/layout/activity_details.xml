@@ -49,6 +49,8 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             android:background="@drawable/baseline_portrait_black_48dp"
             android:onClick="takeAPicture"
             android:id="@+id/UserPicture"/>
