@@ -32,19 +32,24 @@ class DetailsActivity : AppCompatActivity(){
     val PERMISSION_REQUEST_CODE_MESSAGE = 1
     private val PERMISSION_REQUEST_CODE = 1
     val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_BY_FILE = 101
-
+    var newPerson = true;
     var mFile: File? = null
+    var id = 0
+    val mRep = PersonRepositoryInDB.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
-        val mRep = PersonRepositoryInDB.get()
+
 
         if (intent.extras != null) {
+            save.setText("Update")
+            newPerson = false
             val extras: Bundle = intent.extras!!
             val friend = extras["friend"] as BEPerson
 
+            id = friend.id
             personName.setText(friend.name)
             phoneNumber.setText(friend.phone)
             address.setText(friend.address)
@@ -56,24 +61,37 @@ class DetailsActivity : AppCompatActivity(){
         checkPermissions()
     }
 
-    fun saveNewFriend(view: View) {
-        val name = findViewById<EditText>(R.id.personName).text.toString()
-        val address = findViewById<EditText>(R.id.address).text.toString()
-        val phone = findViewById<EditText>(R.id.phoneNumber).text.toString()
-        val mailAddress = findViewById<EditText>(R.id.mailAddress).text.toString()
-        val website = findViewById<EditText>(R.id.website).text.toString()
-        val birthday = findViewById<DatePicker>(R.id.birthday).toString()
-        val picture = findViewById<EditText>(R.id.picture).text.toString()
+    fun saveFriend(view: View) {
+        val name = personName.text.toString()
+        val phone = phoneNumber.text.toString()
+        val address = address.text.toString()
+        val mailaddress = mailAddress.text.toString()
+        val website = website.text.toString()
+        val birthday = birthday.year.toString() + "-" + birthday.month + "-" + birthday.dayOfMonth
+        val picture = ""
 
+        val friend = BEPerson(id, name, address, phone, mailaddress, website, birthday, picture)
 
-       // val friends = Friends
-
-        if(!name.isNullOrBlank()){
-        //    friends.addFriend(BEFriend(0, name, address, phone, mailAddress, website, birthday, picture))
+        if (newPerson)
+        {
+            saveNewfriend(friend)
+        } else
+        {
+            updateFriend(friend)
         }
 
         val i = Intent(this, MainActivity::class.java)
         startActivity(i)
+    }
+
+    fun saveNewfriend(person: BEPerson)
+    {
+        mRep.insert(person)
+    }
+
+    fun updateFriend(person: BEPerson)
+    {
+        mRep.update(person)
     }
 
     fun call(view: View) {
