@@ -30,6 +30,15 @@ class MainActivity : AppCompatActivity() {
         val listView: ListView = findViewById(R.id.listOfFriends)
 
         listView.adapter = adapter
+
+        listView.setOnItemClickListener { _, _, position, _ -> onListItemClick(position) }
+    }
+
+    fun onListItemClick (position: Int) {
+        val intent = Intent(this, DetailsActivity::class.java)
+        val friend = Friends.getAll()[position]
+        intent.putExtra("friend", friend)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

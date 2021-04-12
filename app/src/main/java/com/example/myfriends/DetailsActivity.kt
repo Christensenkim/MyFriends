@@ -16,6 +16,7 @@ import android.Manifest;
 import android.graphics.Color
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
@@ -35,6 +36,19 @@ class DetailsActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+
+        if (intent.extras != null) {
+            val extras: Bundle = intent.extras!!
+            val friend = extras.getSerializable("friend") as BEFriend
+
+            val editTextName: EditText = findViewById(R.id.personName)
+            val editTextPhone: EditText = findViewById(R.id.phoneNumber)
+            val checkboxFavorite: CheckBox = findViewById(R.id.isFavorite)
+
+            editTextName.text = Editable.Factory.getInstance().newEditable(friend.name)
+            editTextPhone.text = Editable.Factory.getInstance().newEditable(friend.phone)
+            checkboxFavorite.isChecked=friend.isFavorite
+        }
 
         checkPermissions()
     }
