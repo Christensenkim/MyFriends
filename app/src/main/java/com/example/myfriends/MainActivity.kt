@@ -11,34 +11,62 @@ import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.example.myfriends.Model.Friends
+import com.example.myfriends.data.PersonRepositoryInDB
+import com.example.myfriends.data.observeOnce
+import com.example.myfriends.models.BEPerson
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val friends = Friends
+        PersonRepositoryInDB.initialize(this)
+        //insertMockData()
+        dataObserver()
+        listOfFriends.setOnItemClickListener { _, _, position, _ -> onListItemClick(position) }
+    }
 
-        val friendNames = friends.getAllNames()
+    private fun insertMockData() {
+        val mRep = PersonRepositoryInDB.get()
+        mRep.insert(BEPerson(0, "Bob", "somestreet 1", "123456", "not@chance.com", "Notyourbusiness.com", "2020-10-10", ""))
+        mRep.insert(BEPerson(0, "Bub", "otherstreet 1", "123456", "nad@chance.com", "Mindyourownbusiness.com", "2020-09-10", ""))
+        mRep.insert(BEPerson(0, "Bab", "laststreet 1", "123456", "no@chance.com", "Keepyournoseoutofmybusiness.com", "2020-08-10", ""))
+    }
+    var cache: List<BEPerson>? = null;
 
-        val adapter: ListAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1, friendNames
-        )
-
-        val listView: ListView = findViewById(R.id.listOfFriends)
-
-        listView.adapter = adapter
-
-        listView.setOnItemClickListener { _, _, position, _ -> onListItemClick(position) }
+    private fun dataObserver() {
+        val mRep = PersonRepositoryInDB.get()
+        val nameObserver = Observer<List<BEPerson>>{ persons ->
+            cache = persons;
+            val asStrings = persons.map { p -> "${p.id}: ${p.name}"}
+            val adapter: ListAdapter = ArrayAdapter(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    asStrings.toTypedArray()
+            )
+            listOfFriends.adapter = adapter
+        }
+        mRep.getAll().observe(this, nameObserver)
     }
 
     fun onListItemClick (position: Int) {
         val intent = Intent(this, DetailsActivity::class.java)
-        val friend = Friends.getAll()[position]
-        intent.putExtra("friend", friend)
-        startActivity(intent)
+        val id = cache!![position].id
+        val personObserver = Observer<BEPerson> { person ->
+            if (person != null)
+            {
+                intent.putExtra("friend", person)
+                startActivity(intent)
+                //Toast.makeText(this, "you have clicked ${person.name} ", Toast.LENGTH_SHORT).show()
+            }
+        }
+        val mRep = PersonRepositoryInDB.get()
+        mRep.getById(id).observeOnce(this, personObserver)
+        //intent.putExtra("friend", friend)
+        //startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -10,8 +10,6 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myfriends.Model.BEFriend
-import com.example.myfriends.Model.Friends
 import android.Manifest;
 import android.graphics.Color
 import android.os.Environment
@@ -20,9 +18,13 @@ import android.text.Editable
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.example.myfriends.data.PersonRepositoryInDB
+import com.example.myfriends.models.BEPerson
+import kotlinx.android.synthetic.main.activity_details.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 class DetailsActivity : AppCompatActivity(){
 
@@ -37,16 +39,17 @@ class DetailsActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
+        val mRep = PersonRepositoryInDB.get()
+
         if (intent.extras != null) {
             val extras: Bundle = intent.extras!!
-            val friend = extras.getSerializable("friend") as BEFriend
+            val friend = extras["friend"] as BEPerson
 
-            val editTextName: EditText = findViewById(R.id.personName)
-            val editTextPhone: EditText = findViewById(R.id.phoneNumber)
-
-
-            editTextName.text = Editable.Factory.getInstance().newEditable(friend.name)
-            editTextPhone.text = Editable.Factory.getInstance().newEditable(friend.phone)
+            personName.setText(friend.name)
+            phoneNumber.setText(friend.phone)
+            address.setText(friend.address)
+            mailAddress.setText(friend.mailAddress)
+            website.setText(friend.website)
 
         }
 
@@ -63,10 +66,10 @@ class DetailsActivity : AppCompatActivity(){
         val picture = findViewById<EditText>(R.id.picture).text.toString()
 
 
-        val friends = Friends
+       // val friends = Friends
 
         if(!name.isNullOrBlank()){
-            friends.addFriend(BEFriend(0, name, address, phone, mailAddress, website, birthday, picture))
+        //    friends.addFriend(BEFriend(0, name, address, phone, mailAddress, website, birthday, picture))
         }
 
         val i = Intent(this, MainActivity::class.java)
