@@ -43,11 +43,11 @@ class DetailsActivity : AppCompatActivity(){
 
             val editTextName: EditText = findViewById(R.id.personName)
             val editTextPhone: EditText = findViewById(R.id.phoneNumber)
-            val checkboxFavorite: CheckBox = findViewById(R.id.isFavorite)
+
 
             editTextName.text = Editable.Factory.getInstance().newEditable(friend.name)
             editTextPhone.text = Editable.Factory.getInstance().newEditable(friend.phone)
-            checkboxFavorite.isChecked=friend.isFavorite
+
         }
 
         checkPermissions()
@@ -55,12 +55,18 @@ class DetailsActivity : AppCompatActivity(){
 
     fun saveNewFriend(view: View) {
         val name = findViewById<EditText>(R.id.personName).text.toString()
+        val address = findViewById<EditText>(R.id.address).text.toString()
         val phone = findViewById<EditText>(R.id.phoneNumber).text.toString()
-        val isFavorite = findViewById<CheckBox>(R.id.isFavorite)
+        val mailAddress = findViewById<EditText>(R.id.mailAddress).text.toString()
+        val website = findViewById<EditText>(R.id.website).text.toString()
+        val birthday = findViewById<DatePicker>(R.id.birthday).toString()
+        val picture = findViewById<EditText>(R.id.picture).text.toString()
+
+
         val friends = Friends
 
         if(!name.isNullOrBlank()){
-            friends.addFriend(BEFriend(name, phone, isFavorite.isChecked))
+            friends.addFriend(BEFriend(0, name, address, phone, mailAddress, website, birthday, picture))
         }
 
         val i = Intent(this, MainActivity::class.java)
