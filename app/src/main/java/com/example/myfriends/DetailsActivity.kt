@@ -35,6 +35,7 @@ class DetailsActivity : AppCompatActivity(){
     val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_BY_FILE = 101
     var newPerson = true;
     var mFile: File? = null
+    var picture = ""
     var id = 0
     var newSetBirthday = ""
     val mRep = PersonRepositoryInDB.get()
@@ -110,8 +111,8 @@ class DetailsActivity : AppCompatActivity(){
         val newMailaddress = mailAddress.text.toString()
         val newWebsite = website.text.toString()
         val newBirthday = newSetBirthday
-        val picture = ""
-        //val picture = Uri.fromFile(mFile).toString()
+        picture = Uri.fromFile(mFile!!).toString()
+
 
         val friend = BEPerson(id, newName, newAddress, newPhone, newMailaddress, newWebsite, newBirthday, picture)
 
