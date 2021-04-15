@@ -3,6 +3,7 @@ package com.example.myfriends.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.util.*
 
 @Entity
 data class BEPerson(
