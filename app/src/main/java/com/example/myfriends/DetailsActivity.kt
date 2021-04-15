@@ -16,12 +16,15 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.example.myfriends.data.PersonRepositoryInDB
 import com.example.myfriends.models.BEPerson
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.log
 
@@ -34,13 +37,22 @@ class DetailsActivity : AppCompatActivity(){
     var newPerson = true;
     var mFile: File? = null
     var id = 0
-    val mRep = PersonRepositoryInDB.get()
+    var newSetBirthday = ""
+    var mRep = PersonRepositoryInDB.get()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
+        val personName: EditText = findViewById(R.id.personName)
+        val phoneNumber: EditText = findViewById(R.id.phoneNumber)
+        val address: EditText = findViewById(R.id.address)
+        val mailAddress: EditText = findViewById(R.id.mailAddress)
+        val website: EditText = findViewById(R.id.website)
 
+        val birthdayPicker: DatePicker = findViewById(R.id.birthday)
+        var birthday = LocalDate.now()
 
         if (intent.extras != null) {
             val save: Button = findViewById(R.id.save)
@@ -49,12 +61,7 @@ class DetailsActivity : AppCompatActivity(){
             val extras: Bundle = intent.extras!!
             val friend = extras["friend"] as BEPerson
 
-            val personName: EditText = findViewById(R.id.personName)
-            val phoneNumber: EditText = findViewById(R.id.phoneNumber)
-            val address: EditText = findViewById(R.id.address)
-            val mailAddress: EditText = findViewById(R.id.mailAddress)
-            val website: EditText = findViewById(R.id.website)
-
+            birthday = LocalDate.parse(friend.birthday, DateTimeFormatter.ISO_DATE)
 
             id = friend.id
             personName.setText(friend.name)
@@ -65,6 +72,24 @@ class DetailsActivity : AppCompatActivity(){
 
         }
 
+        birthdayPicker.init(birthday.year, birthday.monthValue-1, birthday.dayOfMonth, DatePicker.OnDateChangedListener {
+            _, _year, _month, _day ->
+
+            val setYear = _year.toString()
+            var setMonth = (_month+1).toString()
+            var setDay = _day.toString()
+            if (_month+1 < 10){
+                setMonth = "0${_month+1}"
+            }
+            if (_day < 10){
+                setDay = "0$_day"
+            }
+
+            newSetBirthday = "$setYear-$setMonth-$setDay"
+
+            //Toast.makeText(this, "Date changed to: $newSetBirthday ", Toast.LENGTH_SHORT).show()
+        })
+
         checkPermissions()
     }
 
@@ -74,17 +99,16 @@ class DetailsActivity : AppCompatActivity(){
         val address: EditText = findViewById(R.id.address)
         val mailAddress: EditText = findViewById(R.id.mailAddress)
         val website: EditText = findViewById(R.id.website)
-        val birthday: DatePicker = findViewById(R.id.birthday)
 
-        val name = personName.text.toString()
-        val phone = phoneNumber.text.toString()
-        val addressa = address.text.toString()
-        val mailaddress = mailAddress.text.toString()
-        val websitea = website.text.toString()
-        val birthdaya = birthday.year.toString() + "-" + birthday.month + "-" + birthday.dayOfMonth
+        val newName = personName.text.toString()
+        val newPhone = phoneNumber.text.toString()
+        val newAddress = address.text.toString()
+        val newMailaddress = mailAddress.text.toString()
+        val newWebsite = website.text.toString()
+        val newBirthday = newSetBirthday
         val picture = ""
 
-        val friend = BEPerson(id, name, addressa, phone, mailaddress, websitea, birthdaya, picture)
+        val friend = BEPerson(id, newName, newAddress, newPhone, newMailaddress, newWebsite, newBirthday, picture)
 
         if (newPerson)
         {
@@ -101,11 +125,17 @@ class DetailsActivity : AppCompatActivity(){
     fun saveNewfriend(person: BEPerson)
     {
         mRep.insert(person)
+
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
     }
 
     fun updateFriend(person: BEPerson)
     {
         mRep.update(person)
+
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
     }
 
     fun call(view: View) {

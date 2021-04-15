@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.example.myfriends.data.PersonRepositoryInDB
 import com.example.myfriends.data.observeOnce
 import com.example.myfriends.models.BEPerson
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         PersonRepositoryInDB.initialize(this)
+
         //insertMockData()
+
 
         val listOfFriends: ListView = findViewById(R.id.listOfFriends)
 
@@ -30,9 +33,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun insertMockData() {
         val mRep = PersonRepositoryInDB.get()
-        mRep.insert(BEPerson(0, "Bob", "somestreet 1", "123456", "not@chance.com", "Notyourbusiness.com", "2020-10-10", ""))
-        mRep.insert(BEPerson(0, "Bub", "otherstreet 1", "123456", "nad@chance.com", "Mindyourownbusiness.com", "2020-09-10", ""))
-        mRep.insert(BEPerson(0, "Bab", "laststreet 1", "123456", "no@chance.com", "Keepyournoseoutofmybusiness.com", "2020-08-10", ""))
+        mRep.insert(BEPerson(0, "Bob", "somestreet 1", "123456", "not@chance.com", "Notyourbusiness.com", "2020-10-10",""))
+        mRep.insert(BEPerson(0, "Bub", "otherstreet 1", "123456", "nad@chance.com", "Mindyourownbusiness.com", "2020-10-5",""))
+        mRep.insert(BEPerson(0, "Bab", "laststreet 1", "123456", "no@chance.com", "Keepyournoseoutofmybusiness.com", "2020-8-5",""))
     }
     var cache: List<BEPerson>? = null;
 
