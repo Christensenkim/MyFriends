@@ -14,16 +14,15 @@ import android.Manifest;
 import android.graphics.Color
 import android.os.Environment
 import android.provider.MediaStore
-import android.text.Editable
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.example.myfriends.data.PersonRepositoryInDB
 import com.example.myfriends.models.BEPerson
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.log
 
 class DetailsActivity : AppCompatActivity(){
 
@@ -54,6 +53,7 @@ class DetailsActivity : AppCompatActivity(){
             val address: EditText = findViewById(R.id.address)
             val mailAddress: EditText = findViewById(R.id.mailAddress)
             val website: EditText = findViewById(R.id.website)
+            val userPicture: ImageButton = findViewById(R.id.UserPicture)
 
 
             id = friend.id
@@ -62,6 +62,7 @@ class DetailsActivity : AppCompatActivity(){
             address.setText(friend.address)
             mailAddress.setText(friend.mailAddress)
             website.setText(friend.website)
+            userPicture.setImageURI(friend.picture.toUri())
 
         }
 
@@ -82,7 +83,7 @@ class DetailsActivity : AppCompatActivity(){
         val mailaddress = mailAddress.text.toString()
         val websitea = website.text.toString()
         val birthdaya = birthday.year.toString() + "-" + birthday.month + "-" + birthday.dayOfMonth
-        val picture = ""
+        val picture = Uri.fromFile(mFile).toString()
 
         val friend = BEPerson(id, name, addressa, phone, mailaddress, websitea, birthdaya, picture)
 
