@@ -49,6 +49,7 @@ class DetailsActivity : AppCompatActivity(){
         val address: EditText = findViewById(R.id.address)
         val mailAddress: EditText = findViewById(R.id.mailAddress)
         val website: EditText = findViewById(R.id.website)
+        val userPicture: ImageButton = findViewById(R.id.UserPicture)
 
         val birthdayPicker: DatePicker = findViewById(R.id.birthday)
         var birthday = LocalDate.now()
@@ -99,8 +100,6 @@ class DetailsActivity : AppCompatActivity(){
         val address: EditText = findViewById(R.id.address)
         val mailAddress: EditText = findViewById(R.id.mailAddress)
         val website: EditText = findViewById(R.id.website)
-        val birthday: DatePicker = findViewById(R.id.birthday)
-        val picture = Uri.fromFile(mFile).toString()
 
         val newName = personName.text.toString()
         val newPhone = phoneNumber.text.toString()
@@ -108,7 +107,7 @@ class DetailsActivity : AppCompatActivity(){
         val newMailaddress = mailAddress.text.toString()
         val newWebsite = website.text.toString()
         val newBirthday = newSetBirthday
-        val picture = ""
+        val picture = Uri.fromFile(mFile).toString()
 
         val friend = BEPerson(id, newName, newAddress, newPhone, newMailaddress, newWebsite, newBirthday, picture)
 

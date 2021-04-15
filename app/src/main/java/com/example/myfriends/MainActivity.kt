@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
     private fun insertMockData() {
         val mRep = PersonRepositoryInDB.get()
         mRep.insert(BEPerson(0, "Bob", "somestreet 1", "123456", "not@chance.com", "Notyourbusiness.com", "2020-10-10",""))
-        mRep.insert(BEPerson(0, "Bub", "otherstreet 1", "123456", "nad@chance.com", "Mindyourownbusiness.com", "2020-10-5",""))
-        mRep.insert(BEPerson(0, "Bab", "laststreet 1", "123456", "no@chance.com", "Keepyournoseoutofmybusiness.com", "2020-8-5",""))
+        mRep.insert(BEPerson(0, "Bub", "otherstreet 1", "123456", "nad@chance.com", "Mindyourownbusiness.com", "2020-10-05",""))
+        mRep.insert(BEPerson(0, "Bab", "laststreet 1", "123456", "no@chance.com", "Keepyournoseoutofmybusiness.com", "2020-08-05",""))
     }
     var cache: List<BEPerson>? = null;
 
