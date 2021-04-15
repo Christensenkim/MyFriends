@@ -20,7 +20,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.example.myfriends.data.PersonRepositoryInDB
 import com.example.myfriends.models.BEPerson
-import kotlinx.android.synthetic.main.activity_details.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,10 +43,18 @@ class DetailsActivity : AppCompatActivity(){
 
 
         if (intent.extras != null) {
+            val save: Button = findViewById(R.id.save)
             save.setText("Update")
             newPerson = false
             val extras: Bundle = intent.extras!!
             val friend = extras["friend"] as BEPerson
+
+            val personName: EditText = findViewById(R.id.personName)
+            val phoneNumber: EditText = findViewById(R.id.phoneNumber)
+            val address: EditText = findViewById(R.id.address)
+            val mailAddress: EditText = findViewById(R.id.mailAddress)
+            val website: EditText = findViewById(R.id.website)
+
 
             id = friend.id
             personName.setText(friend.name)
@@ -62,15 +69,22 @@ class DetailsActivity : AppCompatActivity(){
     }
 
     fun saveFriend(view: View) {
+        val personName: EditText = findViewById(R.id.personName)
+        val phoneNumber: EditText = findViewById(R.id.phoneNumber)
+        val address: EditText = findViewById(R.id.address)
+        val mailAddress: EditText = findViewById(R.id.mailAddress)
+        val website: EditText = findViewById(R.id.website)
+        val birthday: DatePicker = findViewById(R.id.birthday)
+
         val name = personName.text.toString()
         val phone = phoneNumber.text.toString()
-        val address = address.text.toString()
+        val addressa = address.text.toString()
         val mailaddress = mailAddress.text.toString()
-        val website = website.text.toString()
-        val birthday = birthday.year.toString() + "-" + birthday.month + "-" + birthday.dayOfMonth
+        val websitea = website.text.toString()
+        val birthdaya = birthday.year.toString() + "-" + birthday.month + "-" + birthday.dayOfMonth
         val picture = ""
 
-        val friend = BEPerson(id, name, address, phone, mailaddress, website, birthday, picture)
+        val friend = BEPerson(id, name, addressa, phone, mailaddress, websitea, birthdaya, picture)
 
         if (newPerson)
         {

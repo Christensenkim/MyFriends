@@ -3,20 +3,15 @@ package com.example.myfriends
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.example.myfriends.Model.Friends
 import com.example.myfriends.data.PersonRepositoryInDB
 import com.example.myfriends.data.observeOnce
 import com.example.myfriends.models.BEPerson
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +20,11 @@ class MainActivity : AppCompatActivity() {
 
         PersonRepositoryInDB.initialize(this)
         //insertMockData()
-        dataObserver()
+
+        val listOfFriends: ListView = findViewById(R.id.listOfFriends)
+
+        dataObserver(listOfFriends)
+
         listOfFriends.setOnItemClickListener { _, _, position, _ -> onListItemClick(position) }
     }
 
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     }
     var cache: List<BEPerson>? = null;
 
-    private fun dataObserver() {
+    private fun dataObserver(listOfFriends: ListView) {
         val mRep = PersonRepositoryInDB.get()
         val nameObserver = Observer<List<BEPerson>>{ persons ->
             cache = persons;
