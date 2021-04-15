@@ -37,7 +37,7 @@ class DetailsActivity : AppCompatActivity(){
     var mFile: File? = null
     var id = 0
     var newSetBirthday = ""
-    var mRep = PersonRepositoryInDB.get()
+    val mRep = PersonRepositoryInDB.get()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +53,7 @@ class DetailsActivity : AppCompatActivity(){
 
         val birthdayPicker: DatePicker = findViewById(R.id.birthday)
         var birthday = LocalDate.now()
+        newSetBirthday = birthday.toString()
 
         if (intent.extras != null) {
             val save: Button = findViewById(R.id.save)
@@ -70,6 +71,8 @@ class DetailsActivity : AppCompatActivity(){
             mailAddress.setText(friend.mailAddress)
             website.setText(friend.website)
             userPicture.setImageURI(friend.picture.toUri())
+
+            newSetBirthday = birthday.toString()
 
         }
 
@@ -107,7 +110,8 @@ class DetailsActivity : AppCompatActivity(){
         val newMailaddress = mailAddress.text.toString()
         val newWebsite = website.text.toString()
         val newBirthday = newSetBirthday
-        val picture = Uri.fromFile(mFile).toString()
+        val picture = ""
+        //val picture = Uri.fromFile(mFile).toString()
 
         val friend = BEPerson(id, newName, newAddress, newPhone, newMailaddress, newWebsite, newBirthday, picture)
 
