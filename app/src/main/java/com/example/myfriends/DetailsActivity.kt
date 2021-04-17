@@ -111,7 +111,10 @@ class DetailsActivity : AppCompatActivity(){
         val newMailaddress = mailAddress.text.toString()
         val newWebsite = website.text.toString()
         val newBirthday = newSetBirthday
-        picture = Uri.fromFile(mFile!!).toString()
+        if (mFile != null) {
+            picture = Uri.fromFile(mFile!!).toString()
+        }
+
 
 
         val friend = BEPerson(id, newName, newAddress, newPhone, newMailaddress, newWebsite, newBirthday, picture)
