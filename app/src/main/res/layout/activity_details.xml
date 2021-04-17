@@ -36,25 +36,44 @@
                 android:onClick="message"
                 android:background="@drawable/baseline_textsms_black_48dp"/>
         </LinearLayout>
-
         <EditText
             android:id="@+id/address"
             android:layout_width="310dp"
             android:layout_height="50dp"
             android:layout_below="@+id/personName"
             android:hint="Address"/>
-        <EditText
-            android:id="@+id/mailAddress"
-            android:layout_width="310dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/mailAddress"
-            android:hint="Mail Address"/>
-        <EditText
-            android:id="@+id/website"
-            android:layout_width="310dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/website"
-            android:hint="Website"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/mailAddress"
+                android:layout_width="310dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/mailAddress"
+                android:hint="Mail Address"/>
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:onClick="eMail"
+                android:background="@drawable/baseline_call_black_48dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/website"
+                android:layout_width="310dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/website"
+                android:hint="Website"/>
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:onClick="webSite"
+                android:background="@drawable/baseline_call_black_48dp"/>
+        </LinearLayout>
         <DatePicker
             android:id="@+id/birthday"
             android:layout_width="310dp"
@@ -62,7 +81,6 @@
             android:datePickerMode="spinner"
             android:calendarViewShown="false"
             />
-
         <ImageButton
             android:layout_width="200dp"
             android:layout_height="200dp"

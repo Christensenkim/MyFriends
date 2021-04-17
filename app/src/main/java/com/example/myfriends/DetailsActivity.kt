@@ -288,6 +288,26 @@ class DetailsActivity : AppCompatActivity(){
         img.setBackgroundColor(Color.RED)
     }
 
+    fun eMail(view: View) {
+        val userEmailSlot = findViewById<EditText>(R.id.mailAddress)
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.type = "plain/text"
+        val receivers = arrayOf(userEmailSlot.text.toString())
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, receivers)
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Test")
+        emailIntent.putExtra(Intent.EXTRA_TEXT,
+                "Hej, Hope that it is ok, Best Regards android...;-)")
+        startActivity(emailIntent)
+    }
+
+    fun webSite(view: View) {
+        val userWebsite = findViewById<EditText>(R.id.website)
+        val url = "http://www." + userWebsite.text.toString()
+        val i = Intent(Intent.ACTION_VIEW)
+        i.data = Uri.parse(url)
+        startActivity(i)
+    }
+
     //endregion
 
 
