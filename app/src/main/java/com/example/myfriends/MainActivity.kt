@@ -1,18 +1,18 @@
 package com.example.myfriends
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.ListAdapter
-import android.widget.ListView
+import android.view.*
+import android.widget.*
+import androidx.core.net.toUri
 import androidx.lifecycle.Observer
+import com.example.myfriends.Model.BEFriend
 import com.example.myfriends.data.PersonRepositoryInDB
 import com.example.myfriends.data.observeOnce
 import com.example.myfriends.models.BEPerson
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,8 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         PersonRepositoryInDB.initialize(this)
 
-        //insertMockData()
-
+        insertMockData()
 
         val listOfFriends: ListView = findViewById(R.id.listOfFriends)
 
@@ -90,5 +89,32 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    internal class FriendAdapter(context: Context, private val friends: Array<BEFriend>) : ArrayAdapter<BEFriend>(context, 0, friends)
+    {
+        private val colours = intArrayOf(
+            Color.parseColor("#AAAAAA"),
+            Color.parseColor("#CCCCCC")
+        )
+
+        override fun getView(position: Int, v: View?, parent: ViewGroup): View {
+            var v1: View? = v
+            if (v1 == null) {
+                val li = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)
+                        as LayoutInflater
+                v1 = li.inflate(R.layout.cell_extended, null)
+
+            }
+            val resView: View = v1!!
+            resView.setBackgroundColor(colours[position % colours.size])
+            val f = friends[position]
+            val nameView = resView.findViewById<TextView>(R.id.tvNameExt)
+            val favoriteView = resView.findViewById<ImageView>(R.id.imgFavoriteExt)
+            nameView.text = f.name
+            favoriteView.setImageURI(f.picture.toUri())
+
+            return resView
+        }
     }
 }
